@@ -1,11 +1,19 @@
 public class BookMyStayApp {
+
     public static void main(String[] args) {
-        System.out.println("==========================");
-        System.out.println("Welcome to my Book My Stay App");
-        System.out.println("Hostel Booking System v1.0");
-        System.out.println("===========================");
 
-        System.out.println("Application started succesfully");
+        Room single = new SingleRoom();
+        Room doubleRoom = new DoubleRoom();
 
+        int singleAvailable = 5;
+        int doubleAvailable = 3;
+
+        System.out.println("Single Room Details");
+        single.displayRoomDetails();
+        System.out.println("Available: " + singleAvailable);
+
+        System.out.println("\nDouble Room Details");
+        doubleRoom.displayRoomDetails();
+        System.out.println("Available: " + doubleAvailable);
     }
 }
