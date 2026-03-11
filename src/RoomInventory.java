@@ -1,30 +1,19 @@
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 public class RoomInventory {
 
-    private Map<String, Integer> roomAvailability;
-
+    private Map<String, Integer> availability;
 
     public RoomInventory() {
-        roomAvailability = new HashMap<>();
-        initializeInventory();
-    }
+        availability = new HashMap<>();
 
-    private void initializeInventory() {
-        roomAvailability.put("Single", 5);
-        roomAvailability.put("Double", 3);
-        roomAvailability.put("Suite", 2);
+        availability.put("Single", 3);
+        availability.put("Double", 2);
+        availability.put("Suite", 1);
     }
 
     public Map<String, Integer> getRoomAvailability() {
-        return roomAvailability;
-    }
-
-
-    public void updateAvailability(String roomType, int count) {
-        roomAvailability.put(roomType, count);
+        return availability;
     }
 }

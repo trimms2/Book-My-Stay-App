@@ -1,6 +1,6 @@
 public class DoubleRoom extends Room {
 
     public DoubleRoom() {
-        super(2, 400, 2500.0);
+        super(2, 350, 3500);
     }
 }
