@@ -91,5 +91,32 @@ public class BookMyStayApp {
 
         System.out.println("Total cost for " + res2 + ": ₹" +
                 serviceManager.calculateTotalCost(res2));
+
+        /* --------------------------
+   Use Case 8: Booking History & Reporting
+   -------------------------- */
+
+        System.out.println("\nBooking History & Reports:");
+
+        BookingHistory history = new BookingHistory();
+        BookingReportService reportService = new BookingReportService();
+
+// Re-add booking requests again
+        bookingQueue.addRequest(r1);
+        bookingQueue.addRequest(r2);
+        bookingQueue.addRequest(r3);
+
+        while (bookingQueue.hasPendingRequests()) {
+
+            Reservation request = bookingQueue.getNextRequest();
+
+            allocationService.allocateRoom(request, inventory, history);
+        }
+
+// Display history
+        reportService.displayAllBookings(history);
+
+// Generate summary
+        reportService.generateSummary(history);
     }
 }
