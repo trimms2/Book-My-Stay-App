@@ -2,41 +2,58 @@ import java.util.*;
 
 public class RoomAllocationService {
 
-    /* Stores all allocated room IDs to prevent duplicates */
+
     private Set<String> allocatedRoomIds;
 
-    /* Stores assigned room IDs by room type */
+
     private Map<String, Set<String>> assignedRoomsByType;
 
-    /* Constructor */
+
     public RoomAllocationService() {
         allocatedRoomIds = new HashSet<>();
         assignedRoomsByType = new HashMap<>();
     }
 
-    /* Allocate room for reservation */
+
     public void allocateRoom(Reservation reservation, RoomInventory inventory) {
+        allocateCore(reservation, inventory);
+    }
+
+    public void allocateRoom(Reservation reservation,
+                             RoomInventory inventory,
+                             BookingHistory history) {
+
+        boolean success = allocateCore(reservation, inventory);
+
+
+        if (success) {
+            history.addBooking(reservation);
+        }
+    }
+
+
+    private boolean allocateCore(Reservation reservation, RoomInventory inventory) {
 
         String roomType = reservation.getRoomType();
         Map<String, Integer> availability = inventory.getRoomAvailability();
 
-        // Check availability
+
         if (availability.get(roomType) == null || availability.get(roomType) <= 0) {
             System.out.println("❌ No " + roomType + " rooms available for " + reservation.getGuestName());
-            return;
+            return false;
         }
 
-        // Generate unique room ID
+
         String roomId = generateRoomId(roomType);
 
-        // Store globally
+
         allocatedRoomIds.add(roomId);
 
-        // Store by type
+
         assignedRoomsByType.putIfAbsent(roomType, new HashSet<>());
         assignedRoomsByType.get(roomType).add(roomId);
 
-        // Update inventory immediately
+
         availability.put(roomType, availability.get(roomType) - 1);
 
         // Confirm reservation
@@ -45,9 +62,11 @@ public class RoomAllocationService {
         System.out.println("Room Type: " + roomType);
         System.out.println("Room ID: " + roomId);
         System.out.println("---------------------------");
+
+        return true;
     }
 
-    /* Generate unique room ID */
+
     private String generateRoomId(String roomType) {
 
         String roomId;
