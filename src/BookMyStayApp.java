@@ -63,5 +63,33 @@ public class BookMyStayApp {
 
             allocationService.allocateRoom(request, inventory);
         }
+        System.out.println("\nAdd-On Services:");
+
+        AddOnServiceManager serviceManager = new AddOnServiceManager();
+
+
+        String res1 = "RES-101";
+        String res2 = "RES-102";
+
+
+        AddOnService wifi = new AddOnService("WiFi", 500);
+        AddOnService breakfast = new AddOnService("Breakfast", 300);
+        AddOnService spa = new AddOnService("Spa", 1500);
+
+
+        serviceManager.addService(res1, wifi);
+        serviceManager.addService(res1, breakfast);
+        serviceManager.addService(res2, spa);
+
+
+        serviceManager.displayServices(res1);
+        serviceManager.displayServices(res2);
+
+
+        System.out.println("Total cost for " + res1 + ": ₹" +
+                serviceManager.calculateTotalCost(res1));
+
+        System.out.println("Total cost for " + res2 + ": ₹" +
+                serviceManager.calculateTotalCost(res2));
     }
 }
