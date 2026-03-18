@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class BookMyStayApp {
 
     public static void main(String[] args) {
@@ -122,5 +124,29 @@ public class BookMyStayApp {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        System.out.println("===== Data Persistence & Recovery =====");
+
+        PersistenceService persistenceService = new PersistenceService();
+
+        Object[] data = persistenceService.loadState();
+
+        if (data != null) {
+            inventory = (RoomInventory) data[0];
+            history = (BookingHistory) data[1];
+        }
+
+        Reservation p1 = new Reservation("Abhi", "Single");
+        Reservation p2 = new Reservation("Subha", "Double");
+
+        allocationService.allocateRoom(p1, inventory, history);
+        allocationService.allocateRoom(p2, inventory, history);
+
+        System.out.println("\nCurrent Bookings:");
+        for (Reservation r : history.getAllBookings()) {
+            System.out.println(r.getGuestName() + " - " + r.getRoomType());
+        }
+
+        persistenceService.saveState(inventory, history);
     }
 }

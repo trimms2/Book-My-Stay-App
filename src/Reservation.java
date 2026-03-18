@@ -1,9 +1,7 @@
-public class Reservation {
+import java.io.Serializable;
 
-    /* Name of the guest making the booking */
+public class Reservation implements Serializable {
     private String guestName;
-
-    /* Requested room type */
     private String roomType;
 
     public Reservation(String guestName, String roomType) {

@@ -1,13 +1,12 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.*;
 
-public class RoomInventory {
+public class RoomInventory implements Serializable {
 
     private Map<String, Integer> availability;
 
     public RoomInventory() {
         availability = new HashMap<>();
-
         availability.put("Single", 3);
         availability.put("Double", 2);
         availability.put("Suite", 1);
