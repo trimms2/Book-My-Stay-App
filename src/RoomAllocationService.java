@@ -11,6 +11,23 @@ public class RoomAllocationService {
         allocatedRoomIds = new HashSet<>();
         assignedRoomsByType = new HashMap<>();
     }
+    public String releaseRoom(String roomType) {
+
+        if (!assignedRoomsByType.containsKey(roomType) ||
+                assignedRoomsByType.get(roomType).isEmpty()) {
+            return null;
+        }
+
+        // Get one room ID
+        Iterator<String> iterator = assignedRoomsByType.get(roomType).iterator();
+        String roomId = iterator.next();
+
+        // Remove from structures
+        iterator.remove();
+        allocatedRoomIds.remove(roomId);
+
+        return roomId;
+    }
 
     // UC6
     public void allocateRoom(Reservation reservation, RoomInventory inventory) {
