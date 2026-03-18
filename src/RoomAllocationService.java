@@ -11,6 +11,31 @@ public class RoomAllocationService {
         allocatedRoomIds = new HashSet<>();
         assignedRoomsByType = new HashMap<>();
     }
+    public synchronized void allocateRoomConcurrent(Reservation reservation,
+                                                    RoomInventory inventory) {
+
+        String roomType = reservation.getRoomType();
+        Map<String, Integer> availability = inventory.getRoomAvailability();
+
+        if (availability.get(roomType) == null || availability.get(roomType) <= 0) {
+            System.out.println(Thread.currentThread().getName() +
+                    " ❌ No " + roomType + " rooms for " + reservation.getGuestName());
+            return;
+        }
+
+        String roomId = generateRoomId(roomType);
+
+        allocatedRoomIds.add(roomId);
+
+        assignedRoomsByType.putIfAbsent(roomType, new HashSet<>());
+        assignedRoomsByType.get(roomType).add(roomId);
+
+        availability.put(roomType, availability.get(roomType) - 1);
+
+        System.out.println(Thread.currentThread().getName() +
+                " ✅ Allocated " + roomId +
+                " to " + reservation.getGuestName());
+    }
     public String releaseRoom(String roomType) {
 
         if (!assignedRoomsByType.containsKey(roomType) ||
