@@ -1,6 +1,7 @@
 import java.util.*;
+import java.io.Serializable;
 
-public class BookingHistory {
+public class BookingHistory implements Serializable {
 
     private List<Reservation> confirmedBookings;
 
