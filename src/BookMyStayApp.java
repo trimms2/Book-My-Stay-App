@@ -4,12 +4,10 @@ public class BookMyStayApp {
 
         System.out.println("===== Book My Stay App =====");
 
-        // Rooms
         Room singleRoom = new SingleRoom();
         Room doubleRoom = new DoubleRoom();
         Room suiteRoom = new SuiteRoom();
 
-        // Core Services
         RoomInventory inventory = new RoomInventory();
         RoomSearchService searchService = new RoomSearchService();
         BookingRequestQueue bookingQueue = new BookingRequestQueue();
@@ -18,14 +16,8 @@ public class BookMyStayApp {
         BookingReportService reportService = new BookingReportService();
         CancellationService cancellationService = new CancellationService();
 
-        /* --------------------------
-           Use Case 4: Room Search
-        -------------------------- */
         searchService.searchAvailableRooms(inventory, singleRoom, doubleRoom, suiteRoom);
 
-        /* --------------------------
-           Use Case 5: Booking Queue
-        -------------------------- */
         System.out.println("\nBooking Request Queue:");
 
         Reservation r1 = new Reservation("Abhi", "Single");
@@ -41,9 +33,6 @@ public class BookMyStayApp {
             System.out.println(request.getGuestName() + " requested " + request.getRoomType());
         }
 
-        /* --------------------------
-           Use Case 6: Room Allocation
-        -------------------------- */
         System.out.println("\nRoom Allocation:");
 
         bookingQueue.addRequest(r1);
@@ -55,9 +44,6 @@ public class BookMyStayApp {
             allocationService.allocateRoom(request, inventory);
         }
 
-        /* --------------------------
-           Use Case 7: Add-On Services
-        -------------------------- */
         System.out.println("\nAdd-On Services:");
 
         AddOnServiceManager serviceManager = new AddOnServiceManager();
@@ -79,9 +65,6 @@ public class BookMyStayApp {
         System.out.println("Total cost for " + res1 + ": ₹" + serviceManager.calculateTotalCost(res1));
         System.out.println("Total cost for " + res2 + ": ₹" + serviceManager.calculateTotalCost(res2));
 
-        /* --------------------------
-           Use Case 8: Booking History
-        -------------------------- */
         System.out.println("\nBooking History & Reports:");
 
         bookingQueue.addRequest(r1);
@@ -96,13 +79,10 @@ public class BookMyStayApp {
         reportService.displayAllBookings(history);
         reportService.generateSummary(history);
 
-        /* --------------------------
-           Use Case 9: Validation
-        -------------------------- */
         System.out.println("\nValidation Test:");
 
-        Reservation r4 = new Reservation("", "Single");       // invalid
-        Reservation r5 = new Reservation("John", "Luxury");   // invalid
+        Reservation r4 = new Reservation("", "Single");
+        Reservation r5 = new Reservation("John", "Luxury");
 
         bookingQueue.addRequest(r4);
         bookingQueue.addRequest(r5);
@@ -112,10 +92,35 @@ public class BookMyStayApp {
             allocationService.allocateRoom(request, inventory, history);
         }
 
-
         System.out.println("\nCancellation:");
 
         allocationService.allocateRoom(r1, inventory, history);
         cancellationService.cancelBooking(r1, inventory, history, allocationService);
+
+        System.out.println("===== Concurrent Booking Simulation =====");
+
+        ConcurrentBookingQueue queue = new ConcurrentBookingQueue();
+
+        queue.addRequest(new Reservation("Abhi", "Single"));
+        queue.addRequest(new Reservation("Subha", "Single"));
+        queue.addRequest(new Reservation("Ram", "Single"));
+        queue.addRequest(new Reservation("John", "Single"));
+        queue.addRequest(new Reservation("Priya", "Single"));
+
+        BookingProcessor t1 = new BookingProcessor("Thread-1", queue, allocationService, inventory);
+        BookingProcessor t2 = new BookingProcessor("Thread-2", queue, allocationService, inventory);
+        BookingProcessor t3 = new BookingProcessor("Thread-3", queue, allocationService, inventory);
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        try {
+            t1.join();
+            t2.join();
+            t3.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
